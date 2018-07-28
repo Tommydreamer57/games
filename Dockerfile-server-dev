@@ -4,7 +4,7 @@ WORKDIR /var/server
 
 COPY server/package*.json /var/server/
 
-RUN ["npm", "i", "-g", "nodemon"]
+RUN npm i -g nodemon
 
 RUN yarn
 

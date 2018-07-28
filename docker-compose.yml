@@ -10,7 +10,7 @@ services:
       - 3600:3600
     volumes:
       - ./public:/var/public
-      - /var/public/node_modules
+      # - /var/public/node_modules
   node_server:
     container_name: games-server-container
     build:
