@@ -1,0 +1,9 @@
+FROM mhart/alpine-node:9
+
+WORKDIR /var/server
+
+COPY server /var/server
+
+RUN yarn
+
+CMD ["yarn", "start"]
