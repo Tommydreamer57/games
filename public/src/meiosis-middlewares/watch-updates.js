@@ -1,13 +1,16 @@
 
 // DEEP COPY
-function deepCopy(obj) {
+function deepCopy(obj, prev = []) {
     if (!obj) return obj;
     if (typeof obj === 'string') return obj;
     if (typeof obj === 'number') return obj;
+    prev.push(obj);
     let newObj = {};
     if (Array.isArray(obj)) newObj = [];
     for (let key in obj) {
-        newObj[key] = deepCopy(obj[key]);
+        if (!prev.includes(obj[key])) {
+            newObj[key] = deepCopy(obj[key], prev);
+        }
     }
     return newObj;
 }

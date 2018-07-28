@@ -21,6 +21,10 @@ let count = 0;
 
 // MIDDLEWARES
 app.use(bodyParser.json());
+app.use((req, res, next) => {
+    // console.log(Object.keys(req));
+    next();
+});
 
 // ENDPOINTS
 app.get('/', (req, res) => {
