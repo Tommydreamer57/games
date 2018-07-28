@@ -25,7 +25,7 @@ services:
       - redis_server
     volumes:
       - ./server:/var/server
-      - /var/server/node_modules
+      # - /var/server/node_modules
   redis_server:
     container_name: games-redis-container
     image: redis:3.2.11
