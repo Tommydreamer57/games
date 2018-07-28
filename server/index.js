@@ -27,5 +27,10 @@ app.get('/', (req, res) => {
     res.status(200).send({ message: "It worked!", count });
 });
 
+// SOCKETS
+io.on('connection', socket => {
+    console.log('connected');
+});
+
 // LISTEN
 server.listen(PORT, () => console.log(`games on ${PORT}`));

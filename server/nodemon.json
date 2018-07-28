@@ -7,7 +7,7 @@
     ],
     "watch": [
         ".env",
-        "server/",
+        "./",
         "db/"
     ],
     "env": {

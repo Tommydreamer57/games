@@ -2,10 +2,12 @@ FROM mhart/alpine-node:9
 
 WORKDIR /var/server
 
-COPY server /var/server
+COPY server/package*.json /var/server/
 
 RUN ["npm", "i", "-g", "nodemon"]
 
 RUN yarn
+
+COPY server/ /var/server/
 
 CMD ["yarn", "start"]

@@ -1,0 +1,11 @@
+FROM mhart/alpine-node:9
+
+WORKDIR /var/public
+
+COPY public/package*.json /var/public/
+
+RUN yarn
+
+COPY public/ /var/public/
+
+CMD ["yarn", "start"]

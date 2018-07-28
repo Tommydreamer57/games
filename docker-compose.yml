@@ -1,5 +1,16 @@
 version: '3'
 services:
+  react_server:
+    container_name: games-public-container
+    build:
+      context: .
+      dockerfile: Dockerfile-public-dev
+    image: games-public-image
+    ports:
+      - 3600:3600
+    volumes:
+      - ./public:/var/public
+      - /var/public/node_modules
   node_server:
     container_name: games-server-container
     build:
@@ -9,11 +20,16 @@ services:
     ports:
       - 3610:3610
     links:
+      - react_server
       - postgres_server
       - redis_server
     volumes:
       - ./server:/var/server
       - /var/server/node_modules
+  redis_server:
+    container_name: games-redis-container
+    image: redis:3.2.11
+    restart: always
   postgres_server:
     container_name: games-db-container
     image: postgres:9.5
@@ -24,7 +40,3 @@ services:
       POSTGRES_USER: games # NOT SURE WHAT THIS DOES
     ports:
       - 5432:5432
-  redis_server:
-    container_name: games-redis-container
-    image: redis:3.2.11
-    restart: always
