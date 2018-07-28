@@ -4,6 +4,8 @@ WORKDIR /var/server
 
 COPY server /var/server
 
+RUN ["npm", "i", "-g", "nodemon"]
+
 RUN yarn
 
 CMD ["yarn", "start"]

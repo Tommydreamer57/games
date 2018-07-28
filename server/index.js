@@ -2,6 +2,7 @@
 const express = require('express');
 const http = require('http');
 const socketio = require('socket.io');
+const bodyParser = require('body-parser');
 
 // ENVIRONMENT
 require('dotenv').config();
@@ -18,14 +19,12 @@ const io = socketio(server);
 let count = 0;
 
 // MIDDLEWARES
-app.use((req, res, next) => {
-    count++;
-    next();
-});
+app.use(bodyParser.json());
 
 // ENDPOINTS
-app.get('*', (req, res) => {
-    res.status(200).send({message: "It worked!", count});
+app.get('/', (req, res) => {
+    count++;
+    res.status(200).send({ message: "It worked!", count });
 });
 
 // LISTEN
