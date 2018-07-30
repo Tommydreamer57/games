@@ -15,6 +15,7 @@ mitosis(
     createApp,
     initialModel,
     (view, cb) => ReactDOM.render(view, root, cb),
+    // MIDDLEWARES
     sockets,
     watchUrl,
     watchUpdates({
