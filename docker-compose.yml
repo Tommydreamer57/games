@@ -19,24 +19,25 @@ services:
     image: games-server-image
     ports:
       - 3610:3610
+      - 3611:3611
     links:
       - react_server
-      - postgres_server
-      - redis_server
+#      - postgres_server
+#      - redis_server
     volumes:
       - ./server:/var/server
       # - /var/server/node_modules
-  redis_server:
-    container_name: games-redis-container
-    image: redis:3.2.11
-    restart: always
-  postgres_server:
-    container_name: games-db-container
-    image: postgres:9.5
-    volumes:
-      - ./seed/:/docker-entrypoint-initdb.d/
-    environment:
-      POSTGRES_DB: games # NOT SURE WHAT THIS DOES
-      POSTGRES_USER: games # NOT SURE WHAT THIS DOES
-    ports:
-      - 5432:5432
+#  redis_server:
+#    container_name: games-redis-container
+#    image: redis:3.2.11
+#    restart: always
+#  postgres_server:
+#    container_name: games-db-container
+#    image: postgres:9.5
+#    volumes:
+#      - ./seed/:/docker-entrypoint-initdb.d/
+#    environment:
+#      POSTGRES_DB: games # NOT SURE WHAT THIS DOES
+#      POSTGRES_USER: games # NOT SURE WHAT THIS DOES
+#    ports:
+#      - 5432:5432

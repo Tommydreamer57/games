@@ -1,9 +1,10 @@
 import socketio from 'socket.io-client';
+import { socket_url, express_url } from './.env.js';
 
-const io = socketio();
-
-console.log(io);
+const io = socketio(socket_url);
 
 export default {
-    io
+    io,
+    express_url,
+    socket_url
 }
