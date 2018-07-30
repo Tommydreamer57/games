@@ -1,0 +1,15 @@
+FROM mhart/alpine-node:9
+
+WORKDIR /var/public
+
+COPY public/package*.json /var/public/
+
+RUN npm i
+
+COPY public/ /var/public/
+
+RUN npm run build
+
+RUN npm i -g serve
+
+CMD ["serve", "-s", "build"]

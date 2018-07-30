@@ -9,5 +9,5 @@ export default function createApp(update) {
                 </div>
             );
         }
-    }
+    };
 }

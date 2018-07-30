@@ -54,23 +54,25 @@ function removeKeys(obj, ...keys) {
 }
 
 // WATCH CHANGES IN MODEL
-export default function watchUpdates(update) {
-    let oldCopy, currentCopy;
-    return function (newModel) {
-        console.log("NEW MODEL");
-        console.log(newModel);
-        // TRACK PREVIOUS MODELS - COPY NEW MODELS TO MAINTAIN IMMUTABILITY
-        [oldCopy, currentCopy] = [currentCopy, deepCopy(newModel)];
-        // COMPUTE DIFFERENCES
-        let differences = compare(oldCopy, currentCopy);
-        // TRACE SOURCE OF UPDATE IF NO DIFFERENCES MADE
-        if (Object.keys(differences).length) {
-            console.log("DIFFERENCES:");
-            console.log(differences);
-        } else {
-            console.log("NO DIFFERENCES:");
-            console.trace(newModel);
+export default function ({ ignore }) {
+    return function watchUpdates(update) {
+        let oldCopy, currentCopy;
+        return function (newModel) {
+            console.log("NEW MODEL");
+            console.log(newModel);
+            // TRACK PREVIOUS MODELS - COPY NEW MODELS TO MAINTAIN IMMUTABILITY
+            [oldCopy, currentCopy] = [currentCopy, deepCopy(removeKeys(newModel), ignore)];
+            // COMPUTE DIFFERENCES
+            let differences = compare(oldCopy, currentCopy);
+            // TRACE SOURCE OF UPDATE IF NO DIFFERENCES MADE
+            if (Object.keys(differences).length) {
+                console.log("DIFFERENCES:");
+                console.log(differences);
+            } else {
+                console.log("NO DIFFERENCES:");
+                console.trace(newModel);
+            }
+            return newModel;
         }
-        return newModel;
     }
 }

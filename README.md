@@ -41,3 +41,31 @@ Other users will be able to enter 4-digit code to join game
 
 Game owner can start the game once everyone else has joined
 
+## Tasks
+
+SETUP
+ - Set up Docker - **COMPLETE**
+ - Set up React app - **COMPLETE**
+ - Set up Socket server - **COMPLETE**
+ - Set up routing with meiosis
+     <!-- figure out subroutes inside games -->
+     <!-- figure out file structure -->
+     - Landing page
+         - Join game - input a 4 digit code
+         - Input name
+         - List of games
+             <!-- SOCKETS START HERE -->
+             - Start button next to each game
+                 - Generates 4 digit code
+                 - Links to games waitroom
+         - Wait Room
+             - List of all players
+             - Start button
+         - Game Room
+             - Controlled by each individual game
+         - Results
+             <!-- SOCKETS END HERE -->
+ - Set up rooms in Socket server
+     - Each room is named after the 4 digit code
+     - Each room contains data about the game and players - MAYBE USE REDIS FOR STORING THIS INFO
+CREATE INDIVIDUAL GAMES
