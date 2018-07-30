@@ -66,6 +66,8 @@ SETUP
          - Results
              <!-- SOCKETS END HERE -->
  - Set up rooms in Socket server
+     <!-- figure out file structure -->
+     <!-- figure out 4 digit code creation -->
      - Each room is named after the 4 digit code
      - Each room contains data about the game and players - MAYBE USE REDIS FOR STORING THIS INFO
 CREATE INDIVIDUAL GAMES
