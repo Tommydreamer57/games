@@ -23,6 +23,7 @@ const IO = new SOCKET_SERVER(SERVER);
 IO.on('connection', socket => {
     console.log('connected');
 
+    // TEST
     socket.on('TEST', data => {
         console.log(data);
         socket.emit('TEST SUCCESSFUL');
@@ -30,6 +31,7 @@ IO.on('connection', socket => {
 
     // CREATE GAME
     socket.on('CREATE GAME', ({ game_name, player_name }) => {
+        console.log('CREATING GAME ', game_name, player_name);
         // add 4 digit code, game, and player to store of games
         // generate 4 digit code - start at AAAA -> ZZZZ, then restart
         const game_code = CURRENT_GAMES.createGame(game_name, player_name);
@@ -37,17 +39,28 @@ IO.on('connection', socket => {
         socket.join(game_code);
         // send 4 digit code GAME CREATED
         socket.to(game_code).emit('GAME CREATED');
+        console.log(JSON.stringify(CURRENT_GAMES, null, 4));
     });
 
     // JOIN GAME
     socket.on('JOIN GAME', ({ game_code, player_name }) => {
-        // find correct game by code
-        // add player to the game
-        const game_name = CURRENT_GAMES.joinGame(game_code, player_name);
-        // join the room
-        socket.join(game_code);
-        // send the game_name GAME JOINED
-        socket.to(game_code).emit('GAME JOINED', player_name);
+        console.log('CREATING GAME ', game_code, player_name);
+        // IN CASE GAME CODE IS NOT FOUND
+        try {
+            // find correct game by code
+            // add player to the game
+            const game_name = CURRENT_GAMES.joinGame(game_code, player_name);
+            // join the room
+            socket.join(game_code);
+            // send the game_name GAME JOINED
+            socket.to(game_code).emit('GAME JOINED', { player_name, game_code });
+        }
+        catch (err) {
+            socket.emit(err);
+        }
+        console.log(Object.keys(socket));
+        console.log(socket.rooms);
+        console.log(JSON.stringify(CURRENT_GAMES, null, 4));
     });
 
     // LEAVE GAME
@@ -56,8 +69,9 @@ IO.on('connection', socket => {
         let game_code = socket.room
         // socket.leave(socket.rooms[0])
         // remove player from game
-        CURRENT_GAMES.removePlayer
+        CURRENT_GAMES.removePlayer(game_code, player_name);
         // emit message with who left
+        socket.to(game_code).emit('GAME LEFT', player_name);
     });
 
     // START GAME

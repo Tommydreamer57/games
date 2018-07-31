@@ -1,29 +1,29 @@
 module.exports = class CurrentGames {
     constructor(GAMES) {
-        this.next_code = [65, 65, 65, 64];
+        this.current_code = [65, 65, 65, 64];
         this.games = GAMES;
         this.current_games = {};
     }
     generateCode() {
         const A = 65;
         const Z = 90;
-        this.next_code[3]++;
-        if (this.next_code[3] > 90) {
-            this.next_code[3] = 65;
-            this.next_code[2]++;
+        this.current_code[3]++;
+        if (this.current_code[3] > 90) {
+            this.current_code[3] = 65;
+            this.current_code[2]++;
         }
-        if (this.next_code[2] > 90) {
-            this.next_code[2] = 65;
-            this.next_code[1]++;
+        if (this.current_code[2] > 90) {
+            this.current_code[2] = 65;
+            this.current_code[1]++;
         }
-        if (this.next_code[1] > 90) {
-            this.next_code[1] = 65;
-            this.next_code[0]++;
+        if (this.current_code[1] > 90) {
+            this.current_code[1] = 65;
+            this.current_code[0]++;
         }
-        if (this.next_code[0] > 90) {
-            this.next_code[0] = 65;
+        if (this.current_code[0] > 90) {
+            this.current_code[0] = 65;
         }
-        return this.next_code.map(n => String.fromCharCode(n)).join('');
+        return this.current_code.map(n => String.fromCharCode(n)).join('');
     }
     createGame(game_name, player_name) {
         const game_code = this.generateCode();
@@ -45,6 +45,7 @@ module.exports = class CurrentGames {
         return game.game_name;
     }
     endGame(game_code) {
-        delete this.current_games[game_code];
+        
+        // delete this.current_games[game_code];
     }
 }
