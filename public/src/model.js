@@ -1,3 +1,5 @@
-export default {
+import socket from './socket';
 
+export default {
+    socket
 }

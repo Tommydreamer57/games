@@ -46,7 +46,7 @@ Game owner can start the game once everyone else has joined
 SETUP
  - Set up Docker - **COMPLETE**
  - Set up React app - **COMPLETE**
- - Set up Socket server - **COMPLETE**
+ - Set up Socket server
  - Set up routing with meiosis
      <!-- figure out subroutes inside games -->
      <!-- figure out file structure -->

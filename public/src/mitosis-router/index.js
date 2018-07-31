@@ -1,10 +1,11 @@
 const watchUrl = require('./listen');
 const link = require('./link');
-const createSwitch = require('./switch');
+const { default: createSwitch, nestSwitch } = require('./switch');
 
 module.exports = watchUrl;
 
 Object.assign(module.exports, {
     link,
-    createSwitch
+    createSwitch,
+    nestSwitch
 });
