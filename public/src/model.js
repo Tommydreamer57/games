@@ -1,5 +1,14 @@
 import socket from './socket';
 
 export default {
-    socket
+    socket,
+    router: {
+        history: {
+            location: {}
+        },
+        match: {
+            params: {},
+        },
+        routes: []
+    }
 }

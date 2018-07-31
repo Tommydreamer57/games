@@ -46,8 +46,8 @@ Game owner can start the game once everyone else has joined
 SETUP
  - Set up Docker - **COMPLETE**
  - Set up React app - **COMPLETE**
- - Set up Socket server
- - Set up routing with meiosis
+ - Set up Socket server - **COMPLETE**
+ - Set up routing with meiosis - **COMPLETE**
      <!-- figure out subroutes inside games -->
      <!-- figure out file structure -->
      - Landing page
@@ -58,12 +58,12 @@ SETUP
              - Start button next to each game
                  - Generates 4 digit code
                  - Links to games waitroom
-         - Wait Room
-             - List of all players
-             - Start button
-         - Game Room
-             - Controlled by each individual game
-         - Results
+     - Wait Room
+         - List of all players
+         - Start button
+     - Game Room
+         - Controlled by each individual game
+     - Results
              <!-- SOCKETS END HERE -->
  - Set up rooms in Socket server
      <!-- figure out file structure -->

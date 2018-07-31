@@ -28,7 +28,7 @@ function createSwitch(update, ...routes) {
 }
 
 function nestSwitch(update, baseRoute, ...routes) {
-    return createSwitch(update, routes.map(routeArr => [`${baseRoute}/${routeArr[0]}`, ...routeArr.slice(1)]));
+    return createSwitch(update, routes.map(routeArr => [`${baseRoute}${routeArr[0]}`, ...routeArr.slice(1)]));
 }
 
 Object.assign(module.exports, {
