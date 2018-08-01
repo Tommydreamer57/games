@@ -1,9 +1,11 @@
 module.exports = class GameTracker {
+    
     constructor(GAMES) {
         this.current_code = [65, 65, 65, 64];
         this.games = GAMES;
         this.current_games = {};
     }
+
     generateCode() {
         const A = 65;
         const Z = 90;
@@ -25,6 +27,7 @@ module.exports = class GameTracker {
         }
         return this.current_code.map(n => String.fromCharCode(n)).join('');
     }
+
     createGame(game_name, player_name) {
         const game_code = this.generateCode();
         // find correct game class
@@ -36,6 +39,7 @@ module.exports = class GameTracker {
         this.current_games[game_code] = game;
         return game;
     }
+
     joinGame(game_code, player_name) {
         // find correct game
         if (!this.current_games.hasOwnProperty(game_code)) throw new Error(`invalid game code: ${game_code}`);
@@ -44,6 +48,7 @@ module.exports = class GameTracker {
         game.addPlayer(player_name);
         return game;
     }
+
     leaveGame(game_code, player_name) {
         // find correct game
         if (!this.current_games.hasOwnProperty(game_code)) throw new Error(`invalid game code: ${game_code}`);
@@ -51,8 +56,10 @@ module.exports = class GameTracker {
         game.removePlayer(player_name);
         return game;
     }
+
     endGame(game_code) {
         
         // delete this.current_games[game_code];
     }
+    
 }

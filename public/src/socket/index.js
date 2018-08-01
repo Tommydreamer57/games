@@ -4,9 +4,9 @@ export default function createSocket(update) {
 
     // SOCKET
     // localhost
-    // const socket = io('http://127.0.0.1:5001');
+    const socket = io('http://127.0.0.1:5001');
     // for connecting with iphone/other computers - insert own ip address here (find with `ipconfig` or `ifconfig`)
-    const socket = io('http://192.168.0.43:5001');
+    // const socket = io('http://192.168.0.43:5001');
 
     // ADD SOCKET TO MODEL
     update(model => ({

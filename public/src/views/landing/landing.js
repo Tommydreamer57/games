@@ -14,8 +14,7 @@ export default function createLanding(update) {
             ...model,
             current_player: {
                 ...model.current_player,
-                player_name: name.current.value,
-                creator: true
+                player_name: name.current.value
             },
             current_game: {
                 ...model.current_game,
