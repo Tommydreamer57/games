@@ -31,6 +31,9 @@ IO.on('connection', socket => {
 
     console.log('connected');
 
+    // CREATE SESSION
+    socket.session = {};
+
     // CONTROLLER
     const CTRL = socket_ctrl(IO, socket, CURRENT_GAMES);
 
@@ -55,10 +58,8 @@ IO.on('connection', socket => {
     // RESTART GAME
     socket.on('RESTART GAME', CTRL.restartGame);
 
-    // ON DISCONNECT
-    socket.on('disconnect', () => { // is this correct?
-
-    });
+    // ON DISCONNECT -- figure out a way to maintain through refreshes
+    socket.on('disconnect', CTRL.leaveGame);
 
 });
 

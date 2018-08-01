@@ -2,42 +2,45 @@ import io from 'socket.io-client';
 
 export default function createSocket(update) {
 
+    // SOCKET
     const socket = io('http://127.0.0.1:5001');
 
+    // HISTORY
+    const history = update.access(['router', 'history']);
+
+    // EVENTS
+
     // TEST
-    socket.on('TEST SUCCESSFUL', data => console.log(data));
+    socket.on('TEST SUCCESSFUL', data => {
+        console.log(data);
+    });
 
     // CREATE
-    socket.on('GAME CREATED', ({ game_code }) => {
+    socket.on('GAME CREATED', (current_game) => {
+        console.log('GAME CREATED');
+        console.log(current_game);
         // add game code to model
         update(model => ({
             ...model,
-            current_game: {
-                ...model.current_game,
-                code: game_code
-            }
+            current_game
         }));
         // reroute to waiting room
-        const history = update.access(['router', 'history']);
         const game_name = update.access(['current_game', 'name']);
-        history.push(`/wait/${game_name}`);
+        history.push(`/wait/${current_game.game_name}`);
     });
-
+    
     // JOIN
-    socket.on('GAME JOINED', ({ name, players }) => {
+    socket.on('GAME JOINED', (current_game) => {
+        console.log('GAME JOINED');
+        console.log(current_game);
         // add game name to model
         // add new players to model
         update(model => ({
             ...model,
-            current_game: {
-                ...model.current_game,
-                name,
-                players
-            }
+            current_game
         }));
         // reroute to waiting room
-        const history = update.access(['router', 'history']);
-        history.push(`/wait/${name}`);
+        history.push(`/wait/${current_game.game_name}`);
     });
 
     // LEAVE
@@ -48,14 +51,12 @@ export default function createSocket(update) {
             current_game: {}
         }));
         // reroute to landing
-        const history = update.access(['router', 'history']);
         history.push('/');
     });
 
     // START
     socket.on('GAME STARTED', () => {
         // reroute to games
-        const history = update.access(['router', 'history']);
         const game_name = update.access(['current_game', 'name']);
         history.push(`/game/${game_name}`);
         // ADD INDIVIDUAL GAME EVENTS
@@ -64,7 +65,6 @@ export default function createSocket(update) {
     // END
     socket.on('GAME ENDED', results => {
         // reroute to results
-        const history = update.access(['router', 'history']);
         const game_name = update.access(['current_game', 'name']);
         history.push(`/results/${game_name}`);
     });
@@ -72,13 +72,14 @@ export default function createSocket(update) {
     // RESTART
     socket.on('GAME RESTARTED', () => {
         // reroute to waiting
-        const history = update.access(['router', 'history']);
         const game_name = update.access(['current_game', 'name']);
         history.push(`/wait/${game_name}`);
     });
 
     // ERROR
-    socket.on('ERROR', err => console.error(err));
+    socket.on('ERROR', err => {
+        console.error(err);
+    });
 
     return socket;
 }

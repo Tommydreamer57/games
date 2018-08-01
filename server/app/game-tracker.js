@@ -29,12 +29,12 @@ module.exports = class GameTracker {
         const game_code = this.generateCode();
         // find correct game class
         if (!this.games.hasOwnProperty(game_name)) throw new Error(`invalid game name: ${game_name}`);
-        const game = new this.games[game_name]();
+        const game = new this.games[game_name](game_code);
         // add player to game
         game.addPlayer(player_name);
         // add game to list
         this.current_games[game_code] = game;
-        return game_code;
+        return game;
     }
     joinGame(game_code, player_name) {
         // find correct game

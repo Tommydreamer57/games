@@ -19,5 +19,5 @@ mitosis(
     watchUpdates({
         ignore: ['socket']
     }),
-    freeze
+    // freeze
 );

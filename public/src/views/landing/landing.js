@@ -8,10 +8,20 @@ export default function createLanding(update) {
     const name = createRef();
     const socket = createSocket(update);
 
-    function selectGame(game) {
-        // add selected game to model
-        // initialize socket connection
-        // add socket to model -- maybe?
+    function selectGame() {
+        // add selected game and username to model
+        update(model => ({
+            ...model,
+            current_player: {
+                ...model.current_player,
+                name: name.current.value,
+                creator: true
+            },
+            current_game: {
+                ...model.current_game,
+                name: 'Default'
+            }
+        }));
         // send game and name to socket (back end will generate 4 digit code, )
         socket.emit('CREATE GAME', {
             game_name: 'Default',
@@ -20,10 +30,20 @@ export default function createLanding(update) {
         // wait for response - then add 4 digit code and reroute to waiting room
     }
 
-    function joinGame(game) {
-        // initialize socket connection
-        // const socket = createSocket(update);
-        // add socket to model -- maybe?
+    function joinGame() {
+        // add selected game and username to model
+        update(model => ({
+            ...model,
+            current_player: {
+                ...model.current_player,
+                name: name.current.value
+            },
+            current_game: {
+                ...model.current_game,
+                code: code.current.value,
+                name: 'Default'
+            }
+        }));
         // send 4 digit code and name to socket
         socket.emit('JOIN GAME', {
             game_code: code.current.value,

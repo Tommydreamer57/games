@@ -14,10 +14,6 @@ export default function createApp(update) {
         ['/results/:game_name', createResults, update]
     );
 
-    // handleInput() {
-    //     update(model => model)
-    // }
-
     return {
         view(model) {
             return (

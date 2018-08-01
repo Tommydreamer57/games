@@ -15,7 +15,8 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
             try {
                 // add 4 digit code, game, and player to store of games
                 // generate 4 digit code - start at AAAA -> ZZZZ, then restart
-                const game_code = CURRENT_GAMES.createGame(game_name, player_name);
+                const game = CURRENT_GAMES.createGame(game_name, player_name);
+                const { game_code } = game;
                 console.log(`CREATING GAME: ${game_name}, ${player_name}, ${game_code}`);
                 // leave other rooms
                 for (let room in socket.rooms) {
@@ -24,19 +25,21 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
                     }
                 }
                 // add player/game info to socket
-                socket.session = {
+                Object.assign(socket.session, {
                     player_name,
                     game_code,
                     game_name
-                };
+                });
                 // join the room
                 socket.join(game_code);
                 // send 4 digit code GAME CREATED
-                IO.to(game_code).emit('GAME CREATED', socket.session);
+                console.log('EMITTING NEW GAME');
+                console.log(game);
+                IO.to(game_code).emit('GAME CREATED', game);
             }
             catch (err) {
                 console.log(`ERROR CREATING GAME: ${game_name}, ${player_name}, ${err.toString()}`);
-                socket.emit('ERROR', err.toString());
+                socket.emit('ERROR', err.toString() + 'ERROR CREATING GAME');
             }
         },
         joinGame({ game_code, player_name }) {
@@ -45,8 +48,8 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
                 // find correct game by code
                 // add player to the game
                 const game = CURRENT_GAMES.joinGame(game_code, player_name);
-                console.log(`JOINING GAME: ${game_name}, ${player_name}, ${game_code}`);
                 const { game_name } = game;
+                console.log(`JOINING GAME: ${game_name}, ${player_name}, ${game_code}`);
                 // leave other rooms
                 for (let room in socket.rooms) {
                     if (room !== game_code && room.match(/^[A-Z]{4}$/)) {
@@ -54,19 +57,19 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
                     }
                 }
                 // add player/game info to socket
-                socket.session = {
+                Object.assign(socket.session, {
                     player_name,
                     game_code,
                     game_name
-                };
+                });
                 // join the room
                 socket.join(game_code);
-                // send the game_name GAME JOINED
+                // send the name GAME JOINED
                 IO.to(game_code).emit('GAME JOINED', game);
             }
             catch (err) {
                 console.log(`ERROR JOINING GAME: ${player_name}, ${game_code}, ${err.toString()}`);
-                socket.emit('ERROR', err.toString());
+                socket.emit('ERROR', err.toString() + 'ERROR JOINING GAME');
             }
         },
         leaveGame() {
@@ -76,7 +79,7 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
                 if (room.match(/^[A-Z]{4}$/)) {
                     socket.leave(room)
                     // remove player from game (room is game_code)
-                    CURRENT_GAMES.removePlayer(room, player_name);
+                    CURRENT_GAMES.removePlayer(room, socket.session.player_name);
                     // emit message with who left
                     IO.to(game_code).emit('GAME LEFT', socket.session);
                 }
