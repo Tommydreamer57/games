@@ -36,10 +36,6 @@ export default function createLanding(update) {
         socket.emit('TEST');
     }
 
-    socket.on('TEST SUCCESSFUL', data => console.log(data));
-
-    socket.on('ERROR', err => console.error(err));
-
     return {
         view(model) {
             return (

@@ -9,9 +9,9 @@ export default function createApp(update) {
 
     const switchh = createSwitch(update,
         ['/', createLanding, update, true],
-        ['/wait', createWaiting, update],
-        ['/game', createGame, update],
-        ['/results', createResults, update]
+        ['/wait/:game_name', createWaiting, update],
+        ['/game/:game_name', createGame, update],
+        ['/results/:game_name', createResults, update]
     );
 
     // handleInput() {

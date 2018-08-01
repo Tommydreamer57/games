@@ -31,7 +31,8 @@ IO.on('connection', socket => {
 
     console.log('connected');
 
-    const CTRL = socket_ctrl(socket, CURRENT_GAMES)
+    // CONTROLLER
+    const CTRL = socket_ctrl(IO, socket, CURRENT_GAMES);
 
     // TEST
     socket.on('TEST', CTRL.test);
