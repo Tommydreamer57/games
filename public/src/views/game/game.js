@@ -1,19 +1,23 @@
-import React from 'react';
+import games from '../../games';
 
 export default function createGames(update) {
-    function leaveGame() {
-        // send message to socket to leave game
-        // then reroute to landing
+
+    const gameComponents = {};
+
+    for (let game_name in games) {
+        gameComponents[game_name] = games[game_name].component(update);
     }
+
     return {
         view(model) {
-            return (
-                <div>
-                    GAMES
-                    {/* RENDER CORRECT GAME */}
-                    {/* LEAVE GAME */}
-                </div>
-            );
+            if (!model.current_game.game_code) {
+                const history = update.access(['router', 'history']);
+                setTimeout(() => history.push('/'));
+            }
+            // FIND CORRECT GAME
+            let game = gameComponents[model.current_game.game_name];
+            // RENDER CORRECT GAME
+            return game.view(model);
         }
     };
 }

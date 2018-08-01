@@ -70,4 +70,9 @@ SETUP
      <!-- figure out 4 digit code creation -->
      - Each room is named after the 4 digit code
      - Each room contains data about the game and players - MAYBE USE REDIS FOR STORING THIS INFO
+ - Max players
+ - Allowing/blocking people from joining at different times
+ - Automatic starting of the game
+ - Automatic ending of game / min players / time limit
+ - How to control DOM with each game
 CREATE INDIVIDUAL GAMES
