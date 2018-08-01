@@ -1,6 +1,7 @@
 module.exports = class DefaultGame {
     constructor() {
         this.players = [];
+        this.name = 'Default';
     }
     addPlayer(player_name) {
         if (this.players.some(player => player.name === player_name)) {

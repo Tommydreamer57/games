@@ -42,7 +42,7 @@ module.exports = class GameTracker {
         const game = this.current_games[game_code];
         // add player to game
         game.addPlayer(player_name);
-        return game.game_name;
+        return game;
     }
     leaveGame(game_code, player_name) {
         // find correct game

@@ -46,7 +46,7 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
                 // add player to the game
                 const game = CURRENT_GAMES.joinGame(game_code, player_name);
                 console.log(`JOINING GAME: ${game_name}, ${player_name}, ${game_code}`);
-                const { game_name, players } = game;
+                const { game_name } = game;
                 // leave other rooms
                 for (let room in socket.rooms) {
                     if (room !== game_code && room.match(/^[A-Z]{4}$/)) {
