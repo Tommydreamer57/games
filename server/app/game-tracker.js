@@ -8,20 +8,20 @@ module.exports = class GameTracker {
         const A = 65;
         const Z = 90;
         this.current_code[3]++;
-        if (this.current_code[3] > 90) {
-            this.current_code[3] = 65;
+        if (this.current_code[3] > Z) {
+            this.current_code[3] = A;
             this.current_code[2]++;
         }
-        if (this.current_code[2] > 90) {
-            this.current_code[2] = 65;
+        if (this.current_code[2] > Z) {
+            this.current_code[2] = A;
             this.current_code[1]++;
         }
-        if (this.current_code[1] > 90) {
-            this.current_code[1] = 65;
+        if (this.current_code[1] > Z) {
+            this.current_code[1] = A;
             this.current_code[0]++;
         }
-        if (this.current_code[0] > 90) {
-            this.current_code[0] = 65;
+        if (this.current_code[0] > Z) {
+            this.current_code[0] = A;
         }
         return this.current_code.map(n => String.fromCharCode(n)).join('');
     }
