@@ -6,11 +6,11 @@ export default function createLanding(update) {
 
     const code = createRef();
     const name = createRef();
+    const socket = createSocket(update);
 
     function selectGame(game) {
         // add selected game to model
         // initialize socket connection
-        const socket = createSocket(update);
         // add socket to model -- maybe?
         // send game and name to socket (back end will generate 4 digit code, )
         socket.emit('CREATE GAME', {
@@ -22,7 +22,7 @@ export default function createLanding(update) {
 
     function joinGame(game) {
         // initialize socket connection
-        const socket = createSocket(update);
+        // const socket = createSocket(update);
         // add socket to model -- maybe?
         // send 4 digit code and name to socket
         socket.emit('JOIN GAME', {
@@ -31,6 +31,14 @@ export default function createLanding(update) {
         });
         // wait for response - then add game to model & reroute to waiting room
     }
+
+    function test() {
+        socket.emit('TEST');
+    }
+
+    socket.on('TEST SUCCESSFUL', data => console.log(data));
+
+    socket.on('ERROR', err => console.error(err));
 
     return {
         view(model) {
@@ -44,6 +52,7 @@ export default function createLanding(update) {
                     <button onClick={joinGame} >JOIN GAME</button>
                     {/* GAME LIST */}
                     <button onClick={selectGame} >CREATE GAME</button>
+                    <button onClick={test} >TEST</button>
                 </div>
             );
         }

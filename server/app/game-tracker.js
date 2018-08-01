@@ -1,4 +1,4 @@
-module.exports = class CurrentGames {
+module.exports = class GameTracker {
     constructor(GAMES) {
         this.current_code = [65, 65, 65, 64];
         this.games = GAMES;
@@ -43,6 +43,12 @@ module.exports = class CurrentGames {
         // add player to game
         game.addPlayer(player_name);
         return game.game_name;
+    }
+    leaveGame(game_code, player_name) {
+        // find correct game
+        if (!this.current_games.hasOwnProperty(game_code)) throw new Error(`invalid game code: ${game_code}`);
+        const game = this.current_games[game_code];
+        game.removePlayer(player_name);
     }
     endGame(game_code) {
         
