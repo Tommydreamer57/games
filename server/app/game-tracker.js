@@ -54,6 +54,9 @@ module.exports = class GameTracker {
         if (!this.current_games.hasOwnProperty(game_code)) throw new Error(`invalid game code: ${game_code}`);
         const game = this.current_games[game_code];
         game.removePlayer(player_name);
+        if (!game.players.length) {
+            delete this.current_games[game_code];
+        }
         return game;
     }
 
@@ -61,5 +64,5 @@ module.exports = class GameTracker {
         
         // delete this.current_games[game_code];
     }
-    
+
 }

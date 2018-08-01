@@ -1,18 +1,21 @@
 import React from 'react';
 
 export default function createWaiting(update) {
+
     function startGame() {
         // access socket & send message to start game
         const socket = update.access('socket');
         socket.emit('START GAME');
         // listen for response & then reroute to game
     }
+
     function leaveGame() {
         // access socket & send message to leave game
         const socket = update.access('socket');
         socket.emit('LEAVE GAME');
         // reroute to landing
     }
+    
     return {
         view(model) {
             if (!model.current_game.game_code) {

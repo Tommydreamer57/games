@@ -34,8 +34,7 @@ export default function createSocket(update) {
             current_game
         }));
         // reroute to waiting room
-        const game_name = update.access(['current_game', 'name']);
-        history.push(`/wait/${current_game.game_name}`);
+        history.push(current_game.current_path);
     });
 
     // JOIN
@@ -49,7 +48,7 @@ export default function createSocket(update) {
             current_game
         }));
         // reroute to waiting room
-        history.push(`/wait/${current_game.game_name}`);
+        history.push(current_game.current_path);
     });
 
     // LEAVE (current_user)
@@ -74,25 +73,38 @@ export default function createSocket(update) {
     });
 
     // START
-    socket.on('GAME STARTED', () => {
-        // reroute to games
-        const game_name = update.access(['current_game', 'game_name']);
-        history.push(`/game/${game_name}`);
+    socket.on('GAME STARTED', current_game => {
+        // update game
+        update(model => ({
+            ...model,
+            current_game
+        }));
+        // reroute to game
+        history.push(`/game/${current_game.game_name}`);
         // ADD INDIVIDUAL GAME EVENTS
     });
-
+    
     // END
-    socket.on('GAME ENDED', results => {
+    socket.on('GAME ENDED', current_game => {
+        // update game
+        update(model => ({
+            ...model,
+            current_game
+        }));
         // reroute to results
         const game_name = update.access(['current_game', 'game_name']);
-        history.push(`/results/${game_name}`);
+        history.push(current_game.current_path);
     });
-
+    
     // RESTART
-    socket.on('GAME RESTARTED', () => {
+    socket.on('GAME RESTARTED', current_game => {
+        // update game
+        update(model => ({
+            ...model,
+            current_game
+        }));
         // reroute to waiting
-        const game_name = update.access(['current_game', 'game_name']);
-        history.push(`/wait/${game_name}`);
+        history.push(current_game.current_path);
     });
 
     // ERROR

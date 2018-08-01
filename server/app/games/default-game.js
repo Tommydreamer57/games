@@ -4,6 +4,7 @@ module.exports = class DefaultGame {
         this.players = [];
         this.game_name = 'Default';
         this.game_code = code;
+        this.current_path = '/wait/Default';
     }
 
     addPlayer(player_name) {
@@ -20,7 +21,7 @@ module.exports = class DefaultGame {
     }
 
     start() {
-        
+        this.current_path = '/game/Default';
     }
 
 }

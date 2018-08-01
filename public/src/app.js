@@ -11,7 +11,7 @@ import createSocket from './socket';
 export default function createApp(update) {
 
     // CREATE SOCKET
-    const socket = createSocket(update);
+    createSocket(update);
 
     // ROUTING
     const switchh = createSwitch(update,

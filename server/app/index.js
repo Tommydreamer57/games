@@ -37,29 +37,10 @@ IO.on('connection', socket => {
     // CONTROLLER
     const CTRL = socket_ctrl(IO, socket, CURRENT_GAMES);
 
-    // TEST
-    socket.on('TEST', CTRL.test);
-
-    // CREATE GAME
-    socket.on('CREATE GAME', CTRL.createGame);
-
-    // JOIN GAME
-    socket.on('JOIN GAME', CTRL.joinGame);
-
-    // LEAVE GAME
-    socket.on('LEAVE GAME', CTRL.leaveGame);
-
-    // START GAME
-    socket.on('START GAME', CTRL.startGame);
-
-    // END GAME
-    socket.on('END GAME', CTRL.endGame);
-
-    // RESTART GAME
-    socket.on('RESTART GAME', CTRL.restartGame);
-
-    // ON DISCONNECT -- figure out a way to maintain through refreshes
-    socket.on('disconnect', CTRL.leaveGame);
+    // EVENTS
+    for (let event in CTRL) {
+        socket.on(event.replace(/_/g, ' '), CTRL[event]);
+    }
 
 });
 

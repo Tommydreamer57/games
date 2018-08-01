@@ -8,8 +8,10 @@ import watchUrl from './mitosis-router';
 import createApp from './app';
 import initialModel from './model';
 
+// ROOT ELEMENT
 const root = document.getElementById('root');
 
+// INITIALIZE
 mitosis(
     createApp,
     initialModel,
@@ -19,5 +21,5 @@ mitosis(
     watchUpdates({
         ignore: ['socket']
     }),
-    // freeze
+    // freeze -- doesn't work with sockets right now
 );

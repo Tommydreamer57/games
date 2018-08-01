@@ -2,7 +2,7 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
 
     return {
 
-        test(data) {
+        TEST(data) {
             console.log(data);
             console.log(socket.rooms);
             console.log(socket.session);
@@ -13,7 +13,7 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
             });
         },
 
-        createGame({ game_name, player_name }) {
+        CREATE_GAME({ game_name, player_name }) {
             // IN CASE GAME NAME IS NOT FOUND
             try {
                 // add 4 digit code, game, and player to store of games
@@ -47,7 +47,7 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
             }
         },
 
-        joinGame({ game_code, player_name }) {
+        JOIN_GAME({ game_code, player_name }) {
             // IN CASE GAME CODE IS NOT FOUND
             try {
                 // find correct game by code
@@ -79,7 +79,7 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
             }
         },
 
-        leaveGame() {
+        LEAVE_GAME() {
             try {
                 console.log('LEAVING GAME');
                 console.log(socket.session);
@@ -90,6 +90,7 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
                         // remove player from game (room is game_code)
                         const game = CURRENT_GAMES.leaveGame(room, socket.session.player_name);
                         // REMOVE INDIVIDUAL GAME EVENTS HERE -- these must be added / removed for each individual socket, so they must be removed when someone leaves the game
+                        console.log('LEAVING THIS GAME:');
                         console.log(game);
                         // let the other players know who left the game
                         IO.to(room).emit('GAME LEFT', game);
@@ -108,8 +109,8 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
                 socket.emit('ERROR', err.toString() + ' ERROR LEAVING GAME');
             }
         },
-
-        startGame() {
+        
+        START_GAME() {
             // ADD INDIVIDUAL GAME EVENTS -- or should these be inside CREATE GAME? -- yes these need to be added for each individual socket, so they must be added when a socket joins the game
             const { game_code } = socket.session;
             const game = CURRENT_GAMES.current_games[game_code];
@@ -121,17 +122,35 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
             // send message GAME STARTED
             IO.to(game_code).emit('GAME STARTED', game);
         },
-
-        endGame() {
+        
+        END_GAME() {
             // remove game from store of games
             // send message GAME ENDED
         },
-
-        restartGame({ game_code, game_name, players }) {
+        
+        RESTART_GAME({ game_code, game_name, players }) {
             // add game back to store of games, with all players
             // send message GAME RESTARTED
+        },
+        
+        disconnect() {
+            try {
+                const {
+                    game_code,
+                    player_name
+                } = socket.session;
+                const game = CURRENT_GAMES.leaveGame(game_code, player_name);
+                IO.to(game_code).emit('GAME LEFT', game);
+                // remove game from session
+                delete socket.session.game_code;
+                delete socket.session.game_name;
+            }
+            catch (err) {
+                console.log(`ERROR LEAVING GAME ${err.toString()}`);
+                socket.emit('ERROR', err.toString() + ' ERROR LEAVING GAME');
+            }
         }
-
+        
     };
     
 }
