@@ -1,25 +1,25 @@
 import React, { createRef } from 'react';
 // import games from '../../games';
-import createSocket from '../../socket';
 
 export default function createLanding(update) {
 
+    // INPUT REFERENCES
     const code = createRef();
     const name = createRef();
-    const socket = createSocket(update);
 
     function selectGame() {
+        const socket = update.access('socket');
         // add selected game and username to model
         update(model => ({
             ...model,
             current_player: {
                 ...model.current_player,
-                name: name.current.value,
+                player_name: name.current.value,
                 creator: true
             },
             current_game: {
                 ...model.current_game,
-                name: 'Default'
+                game_name: 'Default'
             }
         }));
         // send game and name to socket (back end will generate 4 digit code, )
@@ -29,19 +29,20 @@ export default function createLanding(update) {
         });
         // wait for response - then add 4 digit code and reroute to waiting room
     }
-
+    
     function joinGame() {
+        const socket = update.access('socket');
         // add selected game and username to model
         update(model => ({
             ...model,
             current_player: {
                 ...model.current_player,
-                name: name.current.value
+                player_name: name.current.value
             },
             current_game: {
                 ...model.current_game,
                 code: code.current.value,
-                name: 'Default'
+                game_name: 'Default'
             }
         }));
         // send 4 digit code and name to socket
@@ -51,8 +52,9 @@ export default function createLanding(update) {
         });
         // wait for response - then add game to model & reroute to waiting room
     }
-
+    
     function test() {
+        const socket = update.access('socket');
         socket.emit('TEST');
     }
 

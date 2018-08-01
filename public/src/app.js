@@ -1,12 +1,19 @@
 import React from 'react';
 import { createSwitch } from './mitosis-router';
+// VIEWS
 import createLanding from './views/landing/landing';
 import createWaiting from './views/waiting/waiting';
 import createGame from './views/game/game';
 import createResults from './views/results/results';
+// SOCKET
+import createSocket from './socket';
 
 export default function createApp(update) {
 
+    // CREATE SOCKET
+    const socket = createSocket(update);
+
+    // ROUTING
     const switchh = createSwitch(update,
         ['/', createLanding, update, true],
         ['/wait/:game_name', createWaiting, update],

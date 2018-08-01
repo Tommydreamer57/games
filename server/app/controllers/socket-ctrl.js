@@ -39,7 +39,7 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
             }
             catch (err) {
                 console.log(`ERROR CREATING GAME: ${game_name}, ${player_name}, ${err.toString()}`);
-                socket.emit('ERROR', err.toString() + 'ERROR CREATING GAME');
+                socket.emit('ERROR', err.toString() + ' ERROR CREATING GAME');
             }
         },
         joinGame({ game_code, player_name }) {
@@ -69,24 +69,35 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
             }
             catch (err) {
                 console.log(`ERROR JOINING GAME: ${player_name}, ${game_code}, ${err.toString()}`);
-                socket.emit('ERROR', err.toString() + 'ERROR JOINING GAME');
+                socket.emit('ERROR', err.toString() + ' ERROR JOINING GAME');
             }
         },
         leaveGame() {
-            // leave the room
-            // leave other rooms
-            for (let room in socket.rooms) {
-                if (room.match(/^[A-Z]{4}$/)) {
-                    socket.leave(room)
-                    // remove player from game (room is game_code)
-                    CURRENT_GAMES.removePlayer(room, socket.session.player_name);
-                    // emit message with who left
-                    IO.to(game_code).emit('GAME LEFT', socket.session);
+            try {
+                console.log('LEAVING GAME');
+                console.log(socket.session);
+                // leave all rooms
+                for (let room in socket.rooms) {
+                    if (room.match(/^[A-Z]{4}$/)) {
+                        socket.leave(room)
+                        // remove player from game (room is game_code)
+                        const game = CURRENT_GAMES.leaveGame(room, socket.session.player_name);
+                        console.log(game);
+                        // emit message with who left
+                        IO.to(room).emit('GAME LEFT', game);
+                        socket.emit('YOU LEFT GAME');
+                    }
                 }
+                // remove game from session
+                delete socket.session.game_code;
+                delete socket.session.game_name;
+                console.log('LEFT GAME');
+                console.log(socket.session);
             }
-            // remove game from session
-            delete socket.session.game_code;
-            delete socket.session.game_name;
+            catch (err) {
+                console.log(`ERROR LEAVING GAME ${err.toString()}`);
+                socket.emit('ERROR', err.toString() + ' ERROR LEAVING GAME');
+            }
         },
         startGame() {
             // ADD INDIVIDUAL GAME EVENTS -- or should these be inside CREATE GAME?
