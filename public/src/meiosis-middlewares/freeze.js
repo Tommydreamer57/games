@@ -4,10 +4,10 @@ export default function (update) {
     return function freeze(obj, prev = []) {
 
         if (!obj || typeof obj !== 'object') return Object.freeze(obj);
-        
+
         else {
             prev.push(obj);
-            
+
             let newObj = {};
 
             if (Array.isArray(obj)) newObj = [];
@@ -16,5 +16,6 @@ export default function (update) {
 
             return Object.freeze(newObj);
         }
+
     }
 }
