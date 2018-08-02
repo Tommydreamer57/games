@@ -35,18 +35,12 @@ export default function createLanding(update) {
         const socket = update.access('socket');
         const player_name = name.current.value;
         const game_code = code.current.value;
-        const game_name = 'Default';
         // add selected game and username to model
         update(model => ({
             ...model,
             current_player: {
                 ...model.current_player,
                 player_name
-            },
-            current_game: {
-                ...model.current_game,
-                game_code,
-                game_name
             }
         }));
         // send 4 digit code and name to socket
@@ -73,11 +67,12 @@ export default function createLanding(update) {
                     <input placeholder="NAME" ref={name} />
                     <button onClick={joinGame} >JOIN GAME</button>
                     {/* GAME LIST */}
-                    {games.map(game => (
+                    {Object.values(games).map(game => (
                         <div>
                             {/* fix to game_name later */}
-                            {game.name}
-                            {game.description}
+                            <h3>{game.name}</h3>
+                            <h4>{game.description}</h4>
+                            <button onClick={selectGame} value={game.name} >START</button>
                         </div>
                     ))}
                     <button onClick={selectGame} >CREATE GAME</button>

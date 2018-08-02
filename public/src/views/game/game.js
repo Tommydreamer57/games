@@ -15,6 +15,9 @@ export default function createGames(update) {
                 setTimeout(() => history.push('/'));
             }
             // FIND CORRECT GAME
+            console.log("COMPONENTS");
+            console.log(components);
+            console.log(model);
             let game = components[model.current_game.game_name];
             // RENDER CORRECT GAME
             return game.view(model);

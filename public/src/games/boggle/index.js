@@ -1,8 +1,8 @@
 import React from 'react';
 
 export default {
-    name: 'Default',
-    description: 'this is the default game',
+    name: 'Boggle',
+    description: 'this is a word game',
     max_players: 5,
     min_players: 2,
     component(update) {

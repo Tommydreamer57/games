@@ -19,37 +19,23 @@ export default function createSocket(update) {
 
     // EVENTS
 
+    function updateGame(current_game) {
+        // update game
+        update(model => ({
+            ...model,
+            current_game
+        }));
+        // reroute to game
+        history.push(current_game.current_path);
+    }
+
     // TEST
     socket.on('TEST SUCCESSFUL', data => {
         console.log(data);
     });
 
-    // CREATE
-    socket.on('GAME CREATED', current_game => {
-        console.log('GAME CREATED');
-        console.log(current_game);
-        // add game code to model
-        update(model => ({
-            ...model,
-            current_game
-        }));
-        // reroute to waiting room
-        history.push(current_game.current_path);
-    });
-
-    // JOIN
-    socket.on('GAME JOINED', current_game => {
-        console.log('GAME JOINED');
-        console.log(current_game);
-        // add game name to model
-        // add new players to model
-        update(model => ({
-            ...model,
-            current_game
-        }));
-        // reroute to waiting room
-        history.push(current_game.current_path);
-    });
+    // UPDATE
+    socket.on('GAME UPDATED', updateGame);
 
     // LEAVE (current_user)
     socket.on('YOU LEFT GAME', () => {
@@ -62,61 +48,6 @@ export default function createSocket(update) {
         }));
         // reroute to landing
         history.push('/');
-    });
-
-    // LEAVE (other user)
-    socket.on('GAME LEFT', current_game => {
-        update(model => ({
-            ...model,
-            current_game
-        }));
-    });
-
-    // START
-    socket.on('GAME STARTED', current_game => {
-        // update game
-        update(model => ({
-            ...model,
-            current_game
-        }));
-        // reroute to game
-        history.push(`/game/${current_game.game_name}`);
-        // ADD INDIVIDUAL GAME EVENTS
-    });
-    
-    // END
-    socket.on('GAME ENDED', current_game => {
-        // update game
-        update(model => ({
-            ...model,
-            current_game
-        }));
-        // reroute to results
-        const game_name = update.access(['current_game', 'game_name']);
-        history.push(current_game.current_path);
-    });
-    
-    // OVER
-    socket.on('GAME OVER', current_game => {
-        // update game
-        update(model => ({
-            ...model,
-            current_game
-        }));
-        // reroute to results
-        const game_name = update.access(['current_game', 'game_name']);
-        history.push(current_game.current_path);
-    });
-    
-    // RESTART
-    socket.on('GAME RESTARTED', current_game => {
-        // update game
-        update(model => ({
-            ...model,
-            current_game
-        }));
-        // reroute to waiting
-        history.push(current_game.current_path);
     });
 
     // ERROR

@@ -1,11 +1,11 @@
 module.exports = class DefaultGame {
 
-    constructor(IO, code, options) {
+    constructor(IO, code, options = {}) {
         this.players = [];
         this.game_code = code;
         this.game_name = options.game_name || 'Default';
         this.current_path = `/wait/${this.game_name}`;
-        this.time_limit = options.time_limit;
+        this.time_limit = 2000 //options.time_limit;
         this.new_players_allowed = true;
         this.emit = (event, data) => IO.to(code).emit(event, data);
     }
@@ -35,7 +35,7 @@ module.exports = class DefaultGame {
         if (!this.onStart) {
             this.current_path = `/game/${this.game_name}`;
             this.new_players_allowed = false;
-            setTimeout(this.end.bind(this), this.time_limit);
+            if (this.time_limit) setTimeout(this.end.bind(this), this.time_limit);
         } else {
             this.onStart();
         }
@@ -62,9 +62,7 @@ module.exports = class DefaultGame {
             this.current_path = `/results/${this.game_name}`;
             this.new_players_allowed = true;
         }
-        console.log('GAME OVER');
-        console.log(this);
-        this.emit('GAME OVER', this);
+        this.emit('GAME UPDATED', this);
     }
 
 }
