@@ -96,6 +96,18 @@ export default function createSocket(update) {
         history.push(current_game.current_path);
     });
     
+    // OVER
+    socket.on('GAME OVER', current_game => {
+        // update game
+        update(model => ({
+            ...model,
+            current_game
+        }));
+        // reroute to results
+        const game_name = update.access(['current_game', 'game_name']);
+        history.push(current_game.current_path);
+    });
+    
     // RESTART
     socket.on('GAME RESTARTED', current_game => {
         // update game

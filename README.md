@@ -65,7 +65,7 @@ SETUP
          - Controlled by each individual game
      - Results
              <!-- SOCKETS END HERE -->
- - Set up rooms in Socket server
+ - Set up rooms in Socket server - **COMPLETE**
      <!-- figure out file structure -->
      <!-- figure out 4 digit code creation -->
      - Each room is named after the 4 digit code

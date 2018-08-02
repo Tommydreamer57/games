@@ -20,12 +20,13 @@ const {
 const SERVER = HTTP.createServer();
 
 
-// CURRENT_GAMES - maybe make this into a class - with methods add game, add player, etc...
-const CURRENT_GAMES = new GameTracker(GAMES);
-
-
 // SOCKETS
 const IO = new SOCKET_SERVER(SERVER);
+
+
+// CURRENT_GAMES
+const CURRENT_GAMES = new GameTracker(GAMES, IO);
+
 
 IO.on('connection', socket => {
 

@@ -1,5 +1,5 @@
 import React, { createRef } from 'react';
-// import games from '../../games';
+import games from '../../games';
 
 export default function createLanding(update) {
 
@@ -8,10 +8,9 @@ export default function createLanding(update) {
     const name = createRef();
 
     // SELECT GAME
-    function selectGame() {
+    function selectGame({ target: { value: game_name } }) {
         const socket = update.access('socket');
         const player_name = name.current.value;
-        const game_name = 'Default';
         // add selected game and username to model
         update(model => ({
             ...model,
@@ -30,7 +29,7 @@ export default function createLanding(update) {
             player_name
         });
     }
-    
+
     // JOIN GAME
     function joinGame() {
         const socket = update.access('socket');
@@ -56,7 +55,7 @@ export default function createLanding(update) {
             player_name
         });
     }
-    
+
     // TEST
     function test() {
         const socket = update.access('socket');
@@ -74,6 +73,13 @@ export default function createLanding(update) {
                     <input placeholder="NAME" ref={name} />
                     <button onClick={joinGame} >JOIN GAME</button>
                     {/* GAME LIST */}
+                    {games.map(game => (
+                        <div>
+                            {/* fix to game_name later */}
+                            {game.name}
+                            {game.description}
+                        </div>
+                    ))}
                     <button onClick={selectGame} >CREATE GAME</button>
                     <button onClick={test} >TEST</button>
                 </div>

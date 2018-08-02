@@ -1,9 +1,10 @@
 module.exports = class GameTracker {
     
-    constructor(GAMES) {
+    constructor(GAMES, IO) {
         this.current_code = [65, 65, 65, 64];
         this.games = GAMES;
         this.current_games = {};
+        this.IO = IO;
     }
 
     generateCode() {
@@ -32,7 +33,7 @@ module.exports = class GameTracker {
         const game_code = this.generateCode();
         // find correct game class
         if (!this.games.hasOwnProperty(game_name)) throw new Error(`invalid game name: ${game_name}`);
-        const game = new this.games[game_name](game_code);
+        const game = new this.games[game_name](this.IO, game_code);
         // add player to game
         game.addPlayer(player_name);
         // add game to list

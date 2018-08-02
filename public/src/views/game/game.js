@@ -2,10 +2,10 @@ import games from '../../games';
 
 export default function createGames(update) {
 
-    const gameComponents = {};
+    const components = {};
 
     for (let game_name in games) {
-        gameComponents[game_name] = games[game_name].component(update);
+        components[game_name] = games[game_name].component(update);
     }
 
     return {
@@ -15,7 +15,7 @@ export default function createGames(update) {
                 setTimeout(() => history.push('/'));
             }
             // FIND CORRECT GAME
-            let game = gameComponents[model.current_game.game_name];
+            let game = components[model.current_game.game_name];
             // RENDER CORRECT GAME
             return game.view(model);
         }

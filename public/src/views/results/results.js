@@ -1,10 +1,12 @@
 import React from 'react';
 
 export default function createResults(update) {
+
     function playAgain() {
         // send message to socket to play game again
         // then reroute to waiting room
     }
+    
     return {
         view(model) {
             return (
@@ -12,7 +14,8 @@ export default function createResults(update) {
                     RESULTS
                     {/* GAME RESULTS - SPECIFIC TO EACH GAME */}
                     {/* PLAY AGAIN BUTTON */}
-                    {/* BACK TO LANDING LINK */}
+                    {/* CHOOSE A NEW GAME -- with icons */}
+                    {/* LINK BACK TO LANDING */}
                 </div>
             );
         }
