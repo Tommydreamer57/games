@@ -5,7 +5,7 @@ module.exports = class DefaultGame {
         this.game_code = code;
         this.game_name = options.game_name || 'Default';
         this.current_path = `/wait/${this.game_name}`;
-        this.time_limit = 2000 //options.time_limit;
+        this.time_limit = options.time_limit;
         this.new_players_allowed = true;
         this.emit = (event, data) => IO.to(code).emit(event, data);
     }
