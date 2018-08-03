@@ -100,17 +100,27 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
             }
         },
         
-        END_GAME() {
-            const { game_code } = socket.session;
+        UPDATE_GAME(data) {
+            const { game_code, player_name } = socket.session;
             const game = CURRENT_GAMES.current_games[game_code];
-            game.end();
-            IO.to(game_code).emit('GAME UPDATED', game);
+            if (game) {
+                game.update(player_name, data);
+            } else {
+                IO.to(game_code).emit('ERROR', `GAME NOT FOUND: ${game_code}`);
+            }
         },
         
         PAUSE_GAME() {
             const { game_code } = socket.session;
             const game = CURRENT_GAMES.current_games[game_code];
             game.pause();
+            IO.to(game_code).emit('GAME UPDATED', game);
+        },
+        
+        END_GAME() {
+            const { game_code } = socket.session;
+            const game = CURRENT_GAMES.current_games[game_code];
+            game.end();
             IO.to(game_code).emit('GAME UPDATED', game);
         },
         

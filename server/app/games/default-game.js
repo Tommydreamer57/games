@@ -5,13 +5,13 @@ module.exports = class DefaultGame {
         this.game_code = code;
         this.game_name = options.game_name || 'Default';
         this.current_path = `/wait/${this.game_name}`;
-        this.time_limit = options.time_limit;
+        this.time_limit = 2000 //options.time_limit;
         this.new_players_allowed = true;
         this.emit = (event, data) => IO.to(code).emit(event, data);
     }
 
     addPlayer(player_name) {
-        if (this.players.some(player => player.name === player_name)) {
+        if (this.players.some(player => player.player_name === player_name)) {
             throw new Error(`player name: ${player_name} already exists`);
         }
         if (!this.new_players_allowed) {
@@ -32,6 +32,9 @@ module.exports = class DefaultGame {
     }
 
     start() {
+        if (this.addListeners) {
+            this.addListeners();
+        }
         if (!this.onStart) {
             this.current_path = `/game/${this.game_name}`;
             this.new_players_allowed = false;
