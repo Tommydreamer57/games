@@ -1,3 +1,5 @@
+const { JSONFriendly } = require('../utils');
+
 module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
 
     return {
@@ -30,9 +32,10 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
                 // join the room
                 socket.join(game_code);
                 // send 4 digit code GAME CREATED
-                IO.to(game_code).emit('GAME UPDATED', game);
+                IO.to(game_code).emit('GAME UPDATED', JSONFriendly(game));
             }
             catch (err) {
+                console.trace(err);
                 socket.emit('ERROR', err.toString() + ' ERROR CREATING GAME');
             }
         },
@@ -59,9 +62,10 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
                 // join the room
                 socket.join(game_code);
                 // send the name GAME JOINED
-                IO.to(game_code).emit('GAME UPDATED', game);
+                IO.to(game_code).emit('GAME UPDATED', JSONFriendly(game));
             }
             catch (err) {
+                console.trace(err);
                 socket.emit('ERROR', err.toString() + ' ERROR JOINING GAME');
             }
         },
@@ -85,6 +89,7 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
                 delete socket.session.game_name;
             }
             catch (err) {
+                console.trace(err);
                 socket.emit('ERROR', err.toString() + ' ERROR LEAVING GAME');
             }
         },
@@ -94,50 +99,66 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
             const game = CURRENT_GAMES.current_games[game_code];
             if (game) {
                 game.start();
-                IO.to(game_code).emit('GAME UPDATED', game);
+                IO.to(game_code).emit('GAME UPDATED', JSONFriendly(game));
             } else {
                 IO.to(game_code).emit('ERROR', `GAME NOT FOUND: ${game_code}`);
             }
         },
-        
+
         UPDATE_GAME(data) {
             const { game_code, player_name } = socket.session;
             const game = CURRENT_GAMES.current_games[game_code];
             if (game) {
+                console.log('UPDATING GAME');
+                console.log(data);
                 game.update(player_name, data);
+                console.log(JSONFriendly(game));
+                IO.to(game_code).emit('GAME UPDATED', JSONFriendly(game));
             } else {
                 IO.to(game_code).emit('ERROR', `GAME NOT FOUND: ${game_code}`);
             }
         },
-        
+
         PAUSE_GAME() {
             const { game_code } = socket.session;
             const game = CURRENT_GAMES.current_games[game_code];
             game.pause();
-            IO.to(game_code).emit('GAME UPDATED', game);
+            IO.to(game_code).emit('GAME UPDATED', JSONFriendly(game));
         },
-        
+
         END_GAME() {
             const { game_code } = socket.session;
             const game = CURRENT_GAMES.current_games[game_code];
             game.end();
-            IO.to(game_code).emit('GAME UPDATED', game);
+            IO.to(game_code).emit('GAME UPDATED', JSONFriendly(game));
         },
-        
+
         RESTART_GAME() {
-            const { game_code, game_name } = socket.session;
-            const new_game = CURRENT_GAMES.startNextGame(game_code, game_name);
-            IO.to(game_code).emit('GAME UPDATED', new_game);
+            try {
+                const { game_code, game_name } = socket.session;
+                const new_game = CURRENT_GAMES.startNextGame(game_code, game_name);
+                IO.to(game_code).emit('GAME UPDATED', JSONFriendly(new_game));
+            }
+            catch (err) {
+                console.trace(err);
+                socket.emit('ERROR', err.toString() + ' ERROR CREATING GAME');
+            }
         },
-        
+
         START_DIFFERENT_GAME({ game_name }) {
-            const { game_code } = socket.session;
-            // instantiate different game class
-            const new_game = CURRENT_GAMES.startNextGame(game_code, game_name);
-            Object.assign(socket.session, {
-                game_name
-            });
-            IO.to(game_code).emit('GAME UPDATED', new_game);
+            try {
+                const { game_code } = socket.session;
+                // instantiate different game class
+                const new_game = CURRENT_GAMES.startNextGame(game_code, game_name);
+                Object.assign(socket.session, {
+                    game_name
+                });
+                IO.to(game_code).emit('GAME UPDATED', JSONFriendly(new_game));
+            }
+            catch (err) {
+                console.trace(err);
+                socket.emit('ERROR', err.toString() + ' ERROR CREATING GAME');
+            }
         },
 
         disconnect() {
@@ -147,12 +168,13 @@ module.exports = function socket_ctrl(IO, socket, CURRENT_GAMES) {
                     player_name
                 } = socket.session;
                 const game = CURRENT_GAMES.leaveGame(game_code, player_name);
-                IO.to(game_code).emit('GAME UPDATED', game);
+                IO.to(game_code).emit('GAME UPDATED', JSONFriendly(game));
                 // remove game from session
                 delete socket.session.game_code;
                 delete socket.session.game_name;
             }
             catch (err) {
+                console.trace(err);
                 socket.emit('ERROR', err.toString() + ' ERROR LEAVING GAME');
             }
         }

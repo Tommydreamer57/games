@@ -8,6 +8,8 @@ export default function createGames(update) {
         components[game_name] = games[game_name].component(update);
     }
 
+    let previousGame;
+
     return {
         view(model) {
             if (!model.current_game.game_code) {
@@ -18,9 +20,14 @@ export default function createGames(update) {
             console.log("COMPONENTS");
             console.log(components);
             console.log(model);
-            let game = components[model.current_game.game_name];
+            let currentGame = components[model.current_game.game_name];
             // RENDER CORRECT GAME
-            return game.view(model);
+            // if new game is rendered, allow old one to clear and new one to init
+            if (currentGame !== previousGame) {
+                if (previousGame && previousGame.clear) previousGame.clear(model);
+                if (currentGame.init) currentGame.init(model);
+            }
+            return currentGame.view(model);
         }
     };
 }

@@ -50,7 +50,7 @@ module.exports = class Boggle extends Default {
             const row = [];
             for (let x = 0; x < dimension; x++) {
                 let randomIndex = ~~(Math.random() * letters.length);
-                let letter = letters.splice(randomIndex, 1);
+                let letter = letters.splice(randomIndex, 1)[0];
                 row.push({ x, y, letter });
             }
             board.push(row);
@@ -111,7 +111,7 @@ module.exports = class Boggle extends Default {
                 wordArr.push(letter);
             }
         }
-        return word;
+        return wordArr;
     }
 
     // CONSTRUCTOR
@@ -119,7 +119,9 @@ module.exports = class Boggle extends Default {
     constructor(IO, code, dimension = 4) {
         super(IO, code, {
             time_limit: 1000 * 60 * 3,
-            game_name: 'Boggle'
+            game_name: 'Boggle',
+            max_players: 24,
+            min_players: 2
         });
         this.dimension = dimension;
         this.board = Boggle.createRandomBoard(dimension);
@@ -133,10 +135,16 @@ module.exports = class Boggle extends Default {
     }
 
     update(player_name, { word }) {
+        console.log('RECEIVED WORD');
+        console.log(word);
+        if (!word) console.log(arguments);
         const player = this.players.find(player => player.player_name === player_name);
         if (this.validate(word)) {
+            console.log('VALID WORD');
             player.words.add(word);
+            console.log([...player.words]);
         }
+        console.log(this.players);
     }
 
     onScore() {
@@ -159,7 +167,10 @@ module.exports = class Boggle extends Default {
     // BOGGLE METHODS
 
     validate(word) {
+        console.log('VALIDATING WORD');
+        console.log(word)
         word = Boggle.convertWordToArray(word);
+        console.log(word);
         for (let y in this.board) {
             const row = this.board[y];
             for (let x in row) {
@@ -177,32 +188,45 @@ module.exports = class Boggle extends Default {
     }
 
     createWord(word, currentLetterObj, currentPath = new Set()) {
+        console.log('CREATING WORD: ' + word.join(''));
         currentPath.add(currentLetterObj);
-        if (currentPath.length === word.length) {
+        console.log(currentPath);
+        if (currentPath.size === word.length) {
             return true;
         }
         else {
-            let nextLetter = word[currentPath.length];
+            let nextLetter = word[currentPath.size];
             let { x, y } = currentLetterObj;
             let adjacentLetters = [
-                board[y - 1][x - 1],
-                board[y - 1][x],
-                board[y - 1][x + 1],
-                board[y][x - 1],
-                board[y][x + 1],
-                board[y + 1][x - 1],
-                board[y + 1][x],
-                board[y + 1][x + 1],
+                this.board[y][x - 1],
+                this.board[y][x + 1],
             ];
+            if (this.board[y - 1]) {
+                adjacentLetters.push(
+                    this.board[y - 1][x - 1],
+                    this.board[y - 1][x],
+                    this.board[y - 1][x + 1],
+                );
+            }
+            if (this.board[y + 1]) {
+                adjacentLetters.push(
+                    this.board[y + 1][x - 1],
+                    this.board[y + 1][x],
+                    this.board[y + 1][x + 1],
+                );
+            }
+            console.log('ADJACENT LETTERS TO x: ' + x + ' y: ' + y);
+            console.log(adjacentLetters);
             for (let nextLetterObj of adjacentLetters) {
                 if (
                     nextLetterObj
                     &&
                     nextLetterObj.letter === nextLetter
+                    && !console.log(nextLetterObj.letter)
                     &&
                     !currentPath.has(nextLetterObj)
                     &&
-                    this.createWord(word, nextLetterObj, currentPath)
+                    this.createWord(word, nextLetterObj, new Set(currentPath))
                 ) {
                     return true;
                 }
