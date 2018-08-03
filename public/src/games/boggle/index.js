@@ -34,6 +34,10 @@ export default {
             }
         }
 
+        function end() {
+            socket.emit('END GAME');
+        }
+
         return {
             // clear(model) {
 
@@ -67,6 +71,7 @@ export default {
                         <WordList
                             words={words}
                         />
+                        <button onClick={end} >END</button>
                     </div>
                 );
             }
