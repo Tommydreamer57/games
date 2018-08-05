@@ -10,17 +10,19 @@ export default function createGames(update) {
 
     let previousGame;
 
+    let noGame = { view() { return null } };
+
     return {
         view(model) {
             if (!model.current_game.game_code) {
-                const history = update.access(['router', 'history']);
+                const { router: { history } } = update.access();
                 setTimeout(() => history.push('/'));
             }
             // FIND CORRECT GAME
             console.log("COMPONENTS");
             console.log(components);
             console.log(model);
-            let currentGame = components[model.current_game.game_name];
+            let currentGame = components[model.current_game.game_name] || noGame;
             // RENDER CORRECT GAME
             // if new game is rendered, allow old one to clear and new one to init
             if (currentGame !== previousGame) {

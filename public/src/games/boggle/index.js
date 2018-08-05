@@ -1,5 +1,6 @@
 import React from 'react';
 import { Board, WordInput, WordList } from './components';
+import { Timer } from '../../components';
 // import './boggle.css';
 
 export default {
@@ -70,6 +71,9 @@ export default {
                         />
                         <WordList
                             words={words}
+                        />
+                        <Timer
+                            time={1000 * 60 * 3}
                         />
                         <button onClick={end} >END</button>
                     </div>

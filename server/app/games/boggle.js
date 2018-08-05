@@ -116,8 +116,8 @@ module.exports = class Boggle extends Default {
 
     // CONSTRUCTOR
 
-    constructor(IO, code, dimension = 4) {
-        super(IO, code, {
+    constructor(code, dimension = 4) {
+        super(code, {
             time_limit: 1000 * 60 * 3,
             game_name: 'Boggle',
             max_players: 24,
@@ -161,7 +161,10 @@ module.exports = class Boggle extends Default {
             });
         });
         this.players.sort((one, two) => one.points > two.points);
-        this.players[0].winner = true;
+        let winner = this.players[0];
+        if (winner) {
+            winner.winner = true;
+        }
     }
 
     // BOGGLE METHODS

@@ -9,7 +9,7 @@ export default function createLanding(update) {
 
     // SELECT GAME
     function selectGame({ target: { value: game_name } }) {
-        const socket = update.access('socket');
+        const { socket } = update.access();
         const player_name = name.current.value;
         // add selected game and username to model
         update(model => ({
@@ -58,6 +58,8 @@ export default function createLanding(update) {
 
     return {
         view(model) {
+            if (code.current) code.current.value = model.current_game.game_code || '';
+            if (name.current) name.current.value = model.current_player.player_name || '';
             return (
                 <div>
                     LANDING

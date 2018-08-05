@@ -1,11 +1,8 @@
 // DEPENDENCIES
 const SOCKET_SERVER = require('socket.io');
 const HTTP = require('http');
-// GAMES
-const GAMES = require('./games');
-const GameTracker = require('./game-tracker');
 // CONTROLLER
-const socket_ctrl = require('./controllers/socket-ctrl');
+const SocketCtrl = require('./controllers/socket-ctrl');
 
 
 // ENVIRONMENT
@@ -24,24 +21,16 @@ const SERVER = HTTP.createServer();
 const IO = new SOCKET_SERVER(SERVER);
 
 
-// CURRENT_GAMES
-const CURRENT_GAMES = new GameTracker(GAMES, IO);
-
-
+// CONNECTION
 IO.on('connection', socket => {
 
     console.log('connected');
 
-    // CREATE SESSION
-    socket.session = {};
-
     // CONTROLLER
-    const CTRL = socket_ctrl(IO, socket, CURRENT_GAMES);
+    const CTRL = new SocketCtrl(IO, socket);
 
     // EVENTS
-    for (let event in CTRL) {
-        socket.on(event.replace(/_/g, ' '), CTRL[event]);
-    }
+    for (let event in CTRL) if (typeof CTRL[event] === 'function') socket.on(event.replace(/_/g, ' '), CTRL[event]);
 
 });
 

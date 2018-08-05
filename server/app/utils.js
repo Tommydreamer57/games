@@ -1,20 +1,24 @@
+
 function JSONFriendly(obj, prev = []) {
-    // convert all iterable objects into arrays
-    if (typeof obj !== 'object') {
+    const type = typeof obj;
+    if (type === 'function') {
+        // convert functions into strings
+        return type;
+    } else if (typeof obj !== 'object') {
+        // return non object types unaltered
         return obj;
     } else {
         let newObj;
         if (obj[Symbol.iterator]) {
+            // convert all iterable objects into arrays
             newObj = [];
             for (let value of obj) {
                 let { copy } = prev.find(item => item.value === value) || {};
-                if (copy) {
-                    newObj[key] = copy;
-                } else {
+                if (!copy) {
                     copy = JSONFriendly(value, prev);
                     prev.push({ value, copy });
-                    newObj.push(copy);
                 }
+                newObj.push(copy);
             }
         } else {
             newObj = {};
