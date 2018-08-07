@@ -1,10 +1,10 @@
 module.exports = class GameTracker {
     
-    constructor(GAMES, IO) {
+    constructor(GAMES) {
         this.current_code = [65, 65, 65, 64];
         this.games = GAMES;
         this.current_games = {};
-        this.IO = IO;
+        this.badwords = [];
     }
 
     generateCode() {
@@ -30,14 +30,16 @@ module.exports = class GameTracker {
     }
 
     createGame(game_name, player_name) {
+        console.log(`CREATING GAME: ${game_name}, ${player_name}`);
         let game_code = this.generateCode();
-        const badwords = [];
-        while (badwords.includes(game_code)) game_code = this.generateCode();
+        while (this.badwords.includes(game_code)) game_code = this.generateCode();
         // find correct game class
         if (!this.games.hasOwnProperty(game_name)) throw new Error(`invalid game name: ${game_name}`);
-        const game = new this.games[game_name](this.IO, game_code);
+        const game = new this.games[game_name](game_code);
         // add player to game
         game.addPlayer(player_name);
+        console.log(`CREATED GAME`);
+        console.log(game);
         // add game to list
         this.current_games[game_code] = game;
         return game;
@@ -68,7 +70,7 @@ module.exports = class GameTracker {
         if (!this.games.hasOwnProperty(new_game_name)) throw new Error(`invalid game name: ${new_game_name}`);
         const old_game = this.current_games[game_code];
         const { players } = old_game;
-        const new_game = new this.games[new_game_name](this.IO, game_code);
+        const new_game = new this.games[new_game_name](game_code);
         // add player to game
         players.forEach(player => {
             new_game.addPlayer(player.player_name);

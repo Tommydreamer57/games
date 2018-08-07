@@ -1,17 +1,18 @@
 module.exports = class DefaultGame {
 
-    constructor(IO, code, options = {}) {
+    constructor(code, options = {}) {
         this.players = [];
         this.game_code = code;
         this.game_name = options.game_name || 'Default';
         this.current_path = `/wait/${this.game_name}`;
         this.time_limit = options.time_limit;
         this.new_players_allowed = true;
-        this.emit = (event, data) => IO.to(code).emit(event, data);
+        this.max_players = options.max_players || 10;
+        this.min_players = options.min_players || 2;
     }
 
     addPlayer(player_name) {
-        if (this.players.some(player => player.name === player_name)) {
+        if (this.players.some(player => player.player_name === player_name)) {
             throw new Error(`player name: ${player_name} already exists`);
         }
         if (!this.new_players_allowed) {
@@ -19,6 +20,9 @@ module.exports = class DefaultGame {
         }
         let new_player = { player_name };
         this.players.push(new_player);
+        if (this.players.length === this.max_players) {
+            this.new_players_allowed = false;
+        }
         if (this.onAddPlayer) {
             this.onAddPlayer(new_player);
         }
@@ -32,10 +36,12 @@ module.exports = class DefaultGame {
     }
 
     start() {
+        if (this.addListeners) {
+            this.addListeners();
+        }
         if (!this.onStart) {
             this.current_path = `/game/${this.game_name}`;
             this.new_players_allowed = false;
-            if (this.time_limit) setTimeout(this.end.bind(this), this.time_limit);
         } else {
             this.onStart();
         }
@@ -62,7 +68,6 @@ module.exports = class DefaultGame {
             this.current_path = `/results/${this.game_name}`;
             this.new_players_allowed = true;
         }
-        this.emit('GAME UPDATED', this);
     }
 
 }

@@ -28,7 +28,11 @@ There will be many different game options to choose from
  - Checkers
  - Othello
  - Hive
+ - Mancala
  - Hearts
+ - Spades
+ - Scum
+ - The Great Dalmudi
  - Others
 
 Each game will have a max number of players

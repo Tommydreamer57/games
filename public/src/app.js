@@ -21,11 +21,17 @@ export default function createApp(update) {
         ['/results/:game_name', createResults, update]
     );
 
+    function test() {
+        const { socket } = update.access();
+        socket.emit('TEST');
+    }
+
     return {
         view(model) {
             return (
                 <div id="app">
                     {switchh.view(model)}
+                    <button onClick={test} >TEST</button>
                 </div>
             );
         }
