@@ -160,7 +160,7 @@ module.exports = class Boggle extends Default {
                 }
             });
         });
-        this.players.sort((one, two) => one.points > two.points);
+        this.players.sort((one, two) => one.points < two.points);
         let winner = this.players[0];
         if (winner) {
             winner.winner = true;
