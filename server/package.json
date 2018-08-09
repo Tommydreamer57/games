@@ -5,7 +5,7 @@
   "main": "app",
   "scripts": {
     "start": "nodemon",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,31 @@
     "socket.io": "^2.1.1"
   },
   "devDependencies": {
+    "jest": "^23.4.2",
     "nodemon": "^1.18.3"
+  },
+  "nodemonConfig": {
+    "restartable": "rs",
+    "ignore": [
+      ".git",
+      "node_modules/**/node_modules",
+      "src"
+    ],
+    "watch": [
+      ".env",
+      "./",
+      "db/"
+    ],
+    "env": {
+      "NODE_ENV": "development"
+    },
+    "events": {
+      "restart": "yarn test"
+    },
+    "ext": "js,json,sql,env"
+  },
+  "jest": {
+    "verbose": true,
+    "testURL": "http://localhost/"
   }
 }

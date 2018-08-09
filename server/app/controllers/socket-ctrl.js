@@ -13,12 +13,12 @@ const CURRENT_GAMES = new GameTracker(GAMES);
 module.exports = class SocketCtrl {
 
     constructor(IO, socket) {
-        // CREATE SESSION
+        // create session
         socket.session = {};
         this.IO = IO;
         this.socket = socket;
+        // bind all methods
         for (let method of Object.getOwnPropertyNames(SocketCtrl.prototype)) {
-            console.log(method);
             this[method] = this[method].bind(this);
         }
     }
