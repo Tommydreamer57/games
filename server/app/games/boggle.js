@@ -1,6 +1,8 @@
-const Default = require('./default-game');
+const DefaultGame = require('./default-game');
+const axios = require('axios');
+const { JSONFriendly } = require('../utils');
 
-module.exports = class Boggle extends Default {
+module.exports = class Boggle extends DefaultGame {
 
     // STATICS
 
@@ -118,7 +120,7 @@ module.exports = class Boggle extends Default {
 
     constructor(code, dimension = 4) {
         super(code, {
-            time_limit: 1000 * 60 * 3,
+            time_limit: 1000 * 60,
             game_name: 'Boggle',
             max_players: 24,
             min_players: 2
@@ -147,24 +149,50 @@ module.exports = class Boggle extends Default {
         console.log(this.players);
     }
 
-    onScore() {
-        // scoring functionality
-        this.players.forEach(player => {
-            player.words.forEach(word => {
-                if (this.players.every(otherPlayer => (
-                    otherPlayer === player
-                    ||
-                    !otherPlayer.words.has(word)
-                ))) {
-                    player.points += Boggle.scoreWord(word, this.dimension);
+    score() {
+        this.status = 'scoring';
+        const words = new Set();
+        const duplicates = new Set();
+        // create list of all words
+        for (let player of this.players) {
+            for (let word of player.words) {
+                if (words.delete(word)) {
+                    duplicates.add(word);
+                } else if (!duplicates.has(word)) {
+                    words.add(word);
                 }
-            });
-        });
-        this.players.sort((one, two) => one.points < two.points);
-        let winner = this.players[0];
-        if (winner) {
-            winner.winner = true;
+            }
         }
+        console.log('FILTERED WORDS');
+        console.log(words);
+        console.log('DUPLICATE WORDS');
+        console.log(duplicates);
+        // first check if words are real
+        return axios.post('https://boggle.thomaslowry.me/api/validate', JSONFriendly({ words }))
+            .then(({ data: word_results }) => {
+                console.log('WORD RESULTS');
+                console.log(word_results.map(word => ({ value: word.value, defined: word.defined })));
+                this.status = 'over';
+                let valid_words = word_results.filter(({ defined }) => defined).map(({ value }) => value);
+                for (let player of this.players) {
+                    for (let word of player.words) {
+                        if (valid_words.includes(word)) {
+                            player.points += Boggle.scoreWord(word, this.dimension);
+                        }
+                    }
+                }
+                this.players.sort((one, two) => one.points < two.points);
+                let winner = this.players[0];
+                if (winner) {
+                    winner.winner = true;
+                }
+                console.log('FINISHED SCORING');
+                console.log(JSON.stringify(JSONFriendly(this), null, 4));
+            })
+            .catch(err => {
+                console.log('SCORING ERROR');
+                console.error(err);
+            });
     }
 
     // BOGGLE METHODS

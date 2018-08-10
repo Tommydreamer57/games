@@ -13,12 +13,12 @@ const CURRENT_GAMES = new GameTracker(GAMES);
 module.exports = class SocketCtrl {
 
     constructor(IO, socket) {
-        // CREATE SESSION
+        // create session
         socket.session = {};
         this.IO = IO;
         this.socket = socket;
+        // bind all methods
         for (let method of Object.getOwnPropertyNames(SocketCtrl.prototype)) {
-            console.log(method);
             this[method] = this[method].bind(this);
         }
     }
@@ -160,7 +160,17 @@ module.exports = class SocketCtrl {
         const { game_code } = socket.session;
         const game = CURRENT_GAMES.current_games[game_code];
         if (game) {
-            game.end();
+            let async = game.end();
+            console.log('ENDED GAME');
+            console.log(async);
+            // to handle asyncronous scoring of games
+            if (async && typeof async.then === 'function') {
+                console.log('WAITING FOR RESPONSE');
+                async.then(() => {
+                    IO.to(game_code).emit('GAME UPDATED', JSONFriendly(game));
+                    console.log('FINISHED SCORING GAME');
+                });
+            }
             IO.to(game_code).emit('GAME UPDATED', JSONFriendly(game));
         } else {
             IO.to(game_code).emit('ERROR', `GAME NOT FOUND: ${game_code}`);

@@ -47,26 +47,18 @@ module.exports = class DefaultGame {
         }
     }
 
-    score() {
-        if (!this.onScore) {
+    end() {
+        this.current_path = `/results/${this.game_name}`;
+        this.new_players_allowed = true;
+        if (this.score) {
+            return this.score();
+        } else {
             // random winner
             let i = ~~Math.random() * this.players.length;
             let winner = this.players[i];
             if (winner) {
                 winner.winner = true;
             }
-        } else {
-            this.onScore();
-        }
-    }
-
-    end() {
-        this.score();
-        if (this.onEnd) {
-            this.onEnd();
-        } else {
-            this.current_path = `/results/${this.game_name}`;
-            this.new_players_allowed = true;
         }
     }
 
