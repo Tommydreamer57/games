@@ -1,25 +1,20 @@
-// GAMES
-const GameTracker = require('../game-tracker');
-const GAMES = require('../games');
 // UTILS
 const { JSONFriendly } = require('../utils');
-
-
-// GAME TRACKER
-const CURRENT_GAMES = new GameTracker(GAMES);
-
 
 // CONTROLLER
 module.exports = class SocketCtrl {
 
-    constructor(IO, socket) {
+    constructor(IO, socket, CURRENT_GAMES) {
         // create session
         socket.session = {};
         this.IO = IO;
         this.socket = socket;
-        // bind all methods
+        this.CURRENT_GAMES = CURRENT_GAMES;
+        // add all listeners to socket
         for (let method of Object.getOwnPropertyNames(SocketCtrl.prototype)) {
-            this[method] = this[method].bind(this);
+            if (typeof this[method] === 'function') {
+                socket.on(method.replace(/_/g, ' '), this[method].bind(this));
+            }
         }
     }
 
@@ -33,7 +28,7 @@ module.exports = class SocketCtrl {
     }
 
     CREATE_GAME({ game_name, player_name }) {
-        const { IO, socket } = this;
+        const { IO, socket, CURRENT_GAMES } = this;
         // IN CASE GAME NAME IS NOT FOUND
         try {
             const game = CURRENT_GAMES.createGame(game_name, player_name);
@@ -62,7 +57,7 @@ module.exports = class SocketCtrl {
     }
 
     JOIN_GAME({ game_code, player_name }) {
-        const { IO, socket } = this;
+        const { IO, socket, CURRENT_GAMES } = this;
         // IN CASE GAME CODE IS NOT FOUND
         try {
             // find correct game by code
@@ -93,7 +88,7 @@ module.exports = class SocketCtrl {
     }
 
     LEAVE_GAME() {
-        const { IO, socket } = this;
+        const { IO, socket, CURRENT_GAMES } = this;
         try {
             // leave all rooms
             for (let room in socket.rooms) {
@@ -118,7 +113,7 @@ module.exports = class SocketCtrl {
     }
 
     START_GAME() {
-        const { IO, socket } = this;
+        const { IO, socket, CURRENT_GAMES } = this;
         const { game_code } = socket.session;
         const game = CURRENT_GAMES.current_games[game_code];
         if (game) {
@@ -133,7 +128,7 @@ module.exports = class SocketCtrl {
     }
 
     UPDATE_GAME(data) {
-        const { IO, socket } = this;
+        const { IO, socket, CURRENT_GAMES } = this;
         const { game_code, player_name } = socket.session;
         const game = CURRENT_GAMES.current_games[game_code];
         if (game) {
@@ -148,7 +143,7 @@ module.exports = class SocketCtrl {
     }
 
     PAUSE_GAME() {
-        const { IO, socket } = this;
+        const { IO, socket, CURRENT_GAMES } = this;
         const { game_code } = socket.session;
         const game = CURRENT_GAMES.current_games[game_code];
         game.pause();
@@ -156,7 +151,7 @@ module.exports = class SocketCtrl {
     }
 
     END_GAME() {
-        const { IO, socket } = this;
+        const { IO, socket, CURRENT_GAMES } = this;
         const { game_code } = socket.session;
         const game = CURRENT_GAMES.current_games[game_code];
         if (game) {
@@ -178,7 +173,7 @@ module.exports = class SocketCtrl {
     }
 
     RESTART_GAME() {
-        const { IO, socket } = this;
+        const { IO, socket, CURRENT_GAMES } = this;
         try {
             const { game_code, game_name } = socket.session;
             const new_game = CURRENT_GAMES.startNextGame(game_code, game_name);
@@ -191,7 +186,7 @@ module.exports = class SocketCtrl {
     }
 
     START_DIFFERENT_GAME({ game_name }) {
-        const { IO, socket } = this;
+        const { IO, socket, CURRENT_GAMES } = this;
         try {
             const { game_code } = socket.session;
             // instantiate different game class
@@ -208,7 +203,7 @@ module.exports = class SocketCtrl {
     }
 
     disconnect() {
-        const { IO, socket } = this;
+        const { IO, socket, CURRENT_GAMES } = this;
         try {
             const {
                 game_code,

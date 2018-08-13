@@ -31,18 +31,9 @@ export default function createResults(update) {
                 <div>
                     RESULTS
                     {/* GAME RESULTS - SPECIFIC TO EACH GAME */}
-                    {/* PLAY AGAIN BUTTON */}
+                    {/* REPLAY BUTTON */}
                     <button onClick={restartGame} >RESTART</button>
-                    {/* CHOOSE A NEW GAME -- with icons */}
-                    {Object.values(games).map(game => (
-                        <div>
-                            {/* fix to game_name later */}
-                            <h3>{game.name}</h3>
-                            <h4>{game.description}</h4>
-                            <button onClick={selectGame} value={game.name} >SELECT</button>
-                        </div>
-                    ))}
-                    {/* LINK BACK TO LANDING */}
+                    {/* FINISH - LINK BACK TO LANDING */}
                 </div>
             );
         }

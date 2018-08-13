@@ -78,7 +78,7 @@ MAKE SURE THIS WORKS:
  - Automatic starting of the game
  - Automatic ending of game / min players / time limit
  - How to control DOM with each game
-TESTING
+TESTING - BACK END
  - Test the utility functions
  - Test the socket controller
      - each method should fire the correct even in the controller
@@ -100,3 +100,4 @@ TESTING
      - 
 UI
 CREATE INDIVIDUAL GAMES
+ - How to organize components?

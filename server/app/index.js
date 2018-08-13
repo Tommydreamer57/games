@@ -3,7 +3,9 @@ const SOCKET_SERVER = require('socket.io');
 const HTTP = require('http');
 // CONTROLLER
 const SocketCtrl = require('./controllers/socket-ctrl');
-
+// GAMES
+const GameTracker = require('./game-tracker');
+const GAMES = require('./games');
 
 // ENVIRONMENT
 require('dotenv').config();
@@ -21,18 +23,12 @@ const SERVER = HTTP.createServer();
 const IO = new SOCKET_SERVER(SERVER);
 
 
+// GAME TRACKER
+const CURRENT_GAMES = new GameTracker(GAMES);
+
+
 // CONNECTION
-IO.on('connection', socket => {
-
-    console.log('connected');
-
-    // CONTROLLER
-    const CTRL = new SocketCtrl(IO, socket);
-
-    // EVENTS
-    for (let event in CTRL) if (typeof CTRL[event] === 'function') socket.on(event.replace(/_/g, ' '), CTRL[event]);
-
-});
+IO.on('connection', socket => new SocketCtrl(IO, socket, CURRENT_GAMES));
 
 
 // LISTEN
