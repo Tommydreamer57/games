@@ -19,7 +19,7 @@ module.exports = class SocketCtrl {
     }
 
     TEST(data) {
-        const { socket } = this;
+        const { socket, CURRENT_GAMES } = this;
         socket.emit('TEST SUCCESSFUL', JSONFriendly({
             rooms: socket.rooms,
             session: socket.session,
